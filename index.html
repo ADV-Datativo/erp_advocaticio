@@ -15647,5 +15647,13 @@ function mostrarLoadingDB(show) {
 
 initWithSupabase();
 </script>
+
+<!-- ==================== MÓDULOS MIGRADOS (ES Modules) ====================
+     Migração incremental para Clean Architecture (Controller/Service/
+     Repository), iniciada em 06/08/2026. Cada módulo aqui listado
+     substitui, por trás do mesmo nome de função, a implementação
+     equivalente que ainda existe (como código morto) mais acima neste
+     arquivo. Ver docs/arquitetura/guia-migracao-modulos.md. -->
+<script type="module" src="/src/modules/financeiro/index.js"></script>
 </body>
 </html>
