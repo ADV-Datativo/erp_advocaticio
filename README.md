@@ -1,49 +1,32 @@
-# Sistema — domínio (Datativo Labs pattern)
+# Datativo Design Language
 
-## Status por submódulo
-| Submódulo | Status | Etapa |
-|---|---|---|
-| Mensagens | ✅ migrado | concluída em 06/08/2026 |
-| Informativos | ⬜ monólito | próximo — mesmo padrão de badge de não-lido que Mensagens |
-| Opções | ⬜ monólito | maior e mais heterogênea — ver achados abaixo antes de migrar |
+Documentação de fundamentos visuais do ADV Easy / Datativo Labs.
+Sprint 1 da Fase 2 (Datativo UI). Nenhum documento aqui escolhe cor,
+desenha componente ou implementa animação — são princípios e conceitos
+que orientam as sprints seguintes (Tokens, Theme Engine, Component
+Library, Layout Engine).
 
-## Achados da auditoria que afetam decisões futuras
+## Índice
 
-**`registrarAuditoria` não é do domínio Sistema.** É chamada 31 vezes
-por 7 domínios diferentes (já injetada em Despesas, Recebimentos,
-Relatórios). Arquiteturalmente deveria estar em `core/services/` (função
-de *gravar* auditoria), não dentro de Sistema/Opções — só a *tela* que
-exibe o log pertence a Sistema. Não corrigido ainda; decisão para quando
-Opções for migrado.
+1. [Brand Principles](01-brand-principles.md) — quem a marca é, visualmente
+2. [Design Principles](02-design-principles.md) — critérios de decisão para toda UI
+3. [Visual Language](03-visual-language.md) — conceitos de organização visual
+4. [Motion](04-motion.md) — filosofia de movimento
+5. [Accessibility](05-accessibility.md) — requisitos não-negociáveis
+6. [Layout Philosophy](06-layout-philosophy.md) — estrutura de página
+7. [Navigation](07-navigation.md) — padrões de navegação
+8. [Feedback](08-feedback.md) — comunicação de estado ao usuário
+9. [Writing Guidelines](09-writing-guidelines.md) — padronização de texto
+10. [Roadmap](10-roadmap.md) — conexão com as sprints seguintes
 
-**`getConfigWpp` não persiste no Supabase**, só `localStorage`. Config
-de WhatsApp é por navegador, não por escritório. Achado, não corrigido —
-decisão do Renan quando Opções migrar.
+## Como usar este conjunto de documentos
 
-**A reorganização de menu "Comunicações/Configurações"** planejada numa
-sessão anterior nunca foi implementada no código real — Sistema continua
-com as 3 páginas originais (Informativos, Mensagens Portal, Opções) sob
-a mesma categoria de sempre.
+Qualquer decisão de interface daqui em diante — tokens, componentes,
+layout — deve ser rastreável a um princípio definido aqui. Se uma
+decisão técnica não se encaixa em nenhum documento, o caminho certo é
+atualizar a documentação primeiro, não decidir por conta própria no
+código.
 
-**"Chat interno" com grupos/DMs/@menções não existe** no código, apesar
-de registrado como concluído na documentação do projeto — ver README de
-Mensagens.
-
-## Estrutura
-```
-sistema.module.js       — registra o DOMÍNIO no core/registry.js (metadado, existência)
-sistema.controller.js   — orquestra chamadas entre submódulos via sistema.registry.js
-sistema.registry.js     — status de migração + API pública de cada submódulo
-sistema.navigation.js   — vazio de propósito (navegação de menu é genérica, não de domínio)
-sistema.events.js       — barramento entre submódulos (Mensagens ↔ Informativos, futuro)
-sistema.constants.js    — vazio, nada cross-submódulo identificado ainda
-modules/
-├── mensagens/     ✅ migrado
-├── informativos/  ⬜
-└── opcoes/        ⬜
-```
-
-## Diferença para o padrão de Financeiro
-Sistema é o primeiro domínio que nasce já registrado no `core/registry.js`
-(via `sistema.module.js`) desde o início, em vez de deixar essa religação
-como pendência futura (que é o estado atual de Financeiro e Operacional).
+## Status
+Sprint 1 concluída. Aguardando aprovação de Renan + ChatGPT antes de
+prosseguir para a Sprint 2 (Design Tokens).
