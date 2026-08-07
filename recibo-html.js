@@ -16,26 +16,26 @@ export function montarHtmlRecibo(dados, fmtMoney, fmtDate, getLogoInlineHtml) {
   <title>Recibo de Pagamento</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Segoe UI',sans-serif;color:#1A2E45;padding:40px;max-width:680px;margin:0 auto}
-    .header{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #1A2E45;padding-bottom:18px;margin-bottom:24px}
-    .logo{width:52px;height:52px;background:#1A2E45;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#C4A96B;font-size:20px;font-weight:700}
-    h1{font-size:18px;color:#1A2E45;margin:0}
+    body{font-family:'Segoe UI',sans-serif;color:#227056;padding:40px;max-width:680px;margin:0 auto}
+    .header{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #227056;padding-bottom:18px;margin-bottom:24px}
+    .logo{width:52px;height:52px;background:#227056;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:20px;font-weight:700}
+    h1{font-size:18px;color:#227056;margin:0}
     .esc p{font-size:11.5px;color:#666;margin:2px 0}
-    .badge-recibo{background:#1A2E45;color:#C4A96B;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:1px}
-    .titulo{text-align:center;padding:16px;background:#1A2E45;border-radius:10px;color:white;margin-bottom:24px}
+    .badge-recibo{background:#227056;color:#FFFFFF;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:1px}
+    .titulo{text-align:center;padding:16px;background:#227056;border-radius:10px;color:white;margin-bottom:24px}
     .titulo h2{font-size:16px;letter-spacing:1.5px;text-transform:uppercase}
     .titulo p{font-size:12px;opacity:0.7;margin-top:4px}
-    .valor-box{text-align:center;padding:20px;background:linear-gradient(135deg,#1A2E45,#1D3A5C);border-radius:12px;margin:20px 0;color:white}
-    .valor-box .v{font-size:32px;font-weight:700;color:#C4A96B;letter-spacing:1px}
+    .valor-box{text-align:center;padding:20px;background:linear-gradient(135deg,#227056,#1B5B45);border-radius:12px;margin:20px 0;color:white}
+    .valor-box .v{font-size:32px;font-weight:700;color:#FFFFFF;letter-spacing:1px}
     .valor-box .ext{font-size:12px;opacity:0.75;margin-top:4px}
     .secao{border:1px solid #DDE4EC;border-radius:8px;padding:14px 16px;margin-bottom:14px}
-    .secao h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#C4A96B;margin-bottom:10px;border-bottom:1px solid #EEF2F7;padding-bottom:6px}
+    .secao h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#227056;margin-bottom:10px;border-bottom:1px solid #EEF2F7;padding-bottom:6px}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
     .item label{font-size:10.5px;color:#888;display:block;margin-bottom:2px}
-    .item strong{font-size:13px;color:#1A2E45}
+    .item strong{font-size:13px;color:#227056}
     .rodape{margin-top:30px;padding-top:20px;border-top:1px solid #DDE4EC;display:flex;justify-content:space-between;align-items:flex-end}
     .assinatura{text-align:center}
-    .assinatura .linha{width:180px;border-top:1px solid #1A2E45;margin:0 auto 6px}
+    .assinatura .linha{width:180px;border-top:1px solid #227056;margin:0 auto 6px}
     .assinatura p{font-size:11.5px;color:#666}
     .autenticidade{font-size:10.5px;color:#999;text-align:right}
     @media print{body{padding:20px}}
