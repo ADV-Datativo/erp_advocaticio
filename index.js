@@ -1,47 +1,47 @@
-// modules/financeiro/index.js
+// modules/diario-oficial/index.js
 // Ponto de entrada do módulo. Registra as funções migradas como globais
 // `window.*` com o MESMO NOME que o index.html monolítico já usa em
-// `onclick="..."`, para que nada precise mudar no HTML durante a migração
-// (strangler pattern: o módulo novo substitui a implementação por trás do
-// mesmo nome, sem quebrar quem chama).
+// `onclick="..."`, para que nada precise mudar no HTML (strangler pattern).
 //
 // Uso no index.html, dentro do <body>, depois de `initWithSupabase()`:
-//   <script type="module" src="/src/modules/financeiro/index.js"></script>
+//   <script type="module" src="/src/modules/operacional/modules/diario-oficial/index.js"></script>
 
-import { criarControllerDespesas } from './controller.js';
-import { getStatusParcela, calcularResumoFinanceiro } from './service.js';
+import { criarControllerDiarioOficial } from './diario-oficial.controller.js';
+import * as state from './diario-oficial.state.js';
+import { registrarEventosGlobais } from './diario-oficial.events.js';
+import { marcarComoMigrado } from '../../operacional.registry.js';
 
-// Dependências que ainda vivem no monólito. Aguarda o DOM/script global
-// terminar de carregar antes de montar o controller, porque `store`,
-// `showToast` etc. só existem depois de `initWithSupabase()` rodar.
 function montarQuandoPronto() {
   if (typeof window.store === 'undefined' || typeof window.showToast !== 'function') {
     setTimeout(montarQuandoPronto, 50);
     return;
   }
 
-  const controller = criarControllerDespesas({
-    store: window.store,
+  state.conectarStore(window.store);
+
+  const controller = criarControllerDiarioOficial({
     showToast: window.showToast,
-    registrarAuditoria: window.registrarAuditoria,
-    fmtMoney: window.fmtMoney,
-    closeModal: window.closeModal,
     openModal: window.openModal,
-    renderDespesas: window.renderDespesas,
+    closeModal: window.closeModal,
     today: window.today
   });
 
   // Substitui as globais antigas pelas novas (mesmo nome, nova implementação)
-  window.salvarDespesa = controller.onSalvarDespesa;
-  window.excluirDespesa = controller.onExcluirDespesa;
-  window.abrirPagarDespesa = controller.onAbrirPagarDespesa;
-  window.confirmarPagamentoDespesa = controller.onConfirmarPagamentoDespesa;
+  window.renderDiarioOficial = controller.onRenderDiarioOficial;
+  window.renderListaPublicacoes = controller.onFiltrarListaPublicacoes;
+  window.filtrarSugestoesClienteDO = controller.onFiltrarSugestoesCliente;
+  window.selecionarClienteDO = controller.onSelecionarCliente;
+  window.abrirModalNovaPublicacao = controller.onAbrirModalNovaPublicacao;
+  window.abrirModalEditarPublicacao = controller.onAbrirModalEditarPublicacao;
+  window.salvarPublicacao = controller.onSalvarPublicacao;
+  window.excluirPublicacaoAtual = controller.onExcluirPublicacaoAtual;
 
-  // Exposto para o restante do monólito (ex: renderFinVisao, renderParcelas)
-  // ir migrando aos poucos a usar a versão em módulo em vez da cópia local.
-  window.financeiroService = { getStatusParcela, calcularResumoFinanceiro };
+  registrarEventosGlobais({
+    onCliqueForaDoAutocomplete: (caixa) => { caixa.style.display = 'none'; }
+  });
 
-  console.info('[financeiro] módulo carregado — salvarDespesa/excluirDespesa/abrirPagarDespesa/confirmarPagamentoDespesa agora rodam via src/modules/financeiro/');
+  marcarComoMigrado('diario-oficial');
+  console.info('[diario-oficial] módulo carregado — funções da tela de Diário Oficial agora rodam via src/modules/operacional/modules/diario-oficial/');
 }
 
 montarQuandoPronto();
