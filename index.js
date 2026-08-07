@@ -1,55 +1,32 @@
-// modules/relatorios/index.js
+// modules/mensagens/index.js
 // Registra as funções migradas como globais `window.*`, e se declara
-// migrado no Registry do domínio Financeiro.
-//
-// IMPORTANTE: precisa carregar DEPOIS de despesas/index.js e
-// recebimentos/index.js na tag <script>, porque relatorios.service.js
-// busca dado deles via financeiro.registry.js — se Relatórios tentar
-// ler antes dos outros dois se registrarem, ele lança erro (ver
-// obterParcelas()/obterDespesas() em relatorios.service.js).
+// migrado no Registry do domínio Sistema.
 //
 // Uso no index.html:
-//   <script type="module" src=".../despesas/index.js"></script>
-//   <script type="module" src=".../recebimentos/index.js"></script>
-//   <script type="module" src=".../relatorios/index.js"></script>   ← por último
+//   <script type="module" src="/src/modules/sistema/modules/mensagens/index.js"></script>
 
-import { criarControllerRelatorios } from './relatorios.controller.js';
-import * as state from './relatorios.state.js';
-import { registrarSubmodulo, estaMigrado } from '../../financeiro.registry.js';
+import { criarControllerMensagens } from './mensagens.controller.js';
+import { registrarSubmodulo } from '../../sistema.registry.js';
 
 function montarQuandoPronto() {
-  const prontoParaMontar =
-    typeof window.store !== 'undefined' &&
-    typeof window.showToast === 'function' &&
-    estaMigrado('despesas') &&
-    estaMigrado('recebimentos');
+  const prontoParaMontar = typeof window.store !== 'undefined' && typeof window.showToast === 'function';
   if (!prontoParaMontar) {
     setTimeout(montarQuandoPronto, 50);
     return;
   }
 
-  state.conectarStore(window.store);
-
-  const controller = criarControllerRelatorios({
-    showToast: window.showToast,
-    fmtMoney: window.fmtMoney,
-    fmtDate: window.fmtDate,
-    today: window.today,
-    isVencido: window.isVencido,
-    diffDays: window.diffDays
+  const controller = criarControllerMensagens({
+    showToast: window.showToast
   });
 
   // Substitui as globais antigas pelas novas (mesmo nome, nova implementação)
-  window.gerarRelatorio = controller.onGerarRelatorio;
-  window.renderRelEntradas = controller.onRenderRelEntradas;
-  window.renderRelSaidas = controller.onRenderRelSaidas;
-  window.exportarCSV = controller.onExportarCSV;
-  window.renderInadimplencia = controller.onRenderInadimplencia;
-  window.exportarInadimplencia = controller.onExportarInadimplencia;
+  window.renderMensagensPortal = controller.onRenderMensagensPortal;
+  window.abrirConversaPortal = controller.onAbrirConversaPortal;
+  window.responderMensagemPortal = controller.onResponderMensagemPortal;
 
-  registrarSubmodulo('relatorios', {});
+  registrarSubmodulo('mensagens', {});
 
-  console.info('[relatorios] submódulo carregado — via src/modules/financeiro/modules/relatorios/ (Fluxo de Caixa + Inadimplência; Conversão continua no monólito, fora do escopo)');
+  console.info('[mensagens] submódulo carregado — via src/modules/sistema/modules/mensagens/');
 }
 
 montarQuandoPronto();
