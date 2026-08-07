@@ -10325,6 +10325,7 @@ Agradecemos pela pontualidade! 🙏
 
 Atenciosamente,
 *{{ESCRITORIO}}*`;
+window.WPP_MSG_RECIBO_PADRAO = WPP_MSG_RECIBO_PADRAO; // ver nota acima sobre const x window
 
 const WPP_MSG_PADRAO = `Olá, *{{NOME}}*! 👋
 
@@ -10343,6 +10344,11 @@ Em caso de dúvidas, estamos à disposição.
 
 Atenciosamente,
 *{{ESCRITORIO}}*`;
+// Expostos em window porque `const` de topo não vira propriedade global
+// automaticamente (diferente de `function`) — necessário para os módulos
+// ES (src/modules/financeiro/modules/recebimentos/) conseguirem ler o
+// mesmo valor. Não altera o conteúdo nem o comportamento da mensagem.
+window.WPP_MSG_PADRAO = WPP_MSG_PADRAO;
 
 function getConfigWpp() {
   try { return JSON.parse(localStorage.getItem(WPP_KEY)||'{}'); } catch(e) { return {}; }
@@ -15655,6 +15661,7 @@ initWithSupabase();
      equivalente que ainda existe (como código morto) mais acima neste
      arquivo. Ver docs/arquitetura/guia-migracao-modulos.md. -->
 <script type="module" src="/src/modules/financeiro/modules/despesas/index.js"></script>
+<script type="module" src="/src/modules/financeiro/modules/recebimentos/index.js"></script>
 <script type="module" src="/src/modules/operacional/modules/diario-oficial/index.js"></script>
 </body>
 </html>

@@ -1,54 +1,77 @@
-// modules/despesas/index.js
+// modules/recebimentos/index.js
 // Registra as funções migradas como globais `window.*` com o MESMO NOME
 // que o index.html já usa em `onclick="..."`, e se declara migrado no
 // Registry do domínio Financeiro.
 //
 // Uso no index.html:
-//   <script type="module" src="/src/modules/financeiro/modules/despesas/index.js"></script>
+//   <script type="module" src="/src/modules/financeiro/modules/recebimentos/index.js"></script>
 
-import { criarControllerDespesas } from './despesas.controller.js';
-import * as state from './despesas.state.js';
-import * as service from './despesas.service.js';
+import { criarControllerRecebimentos } from './recebimentos.controller.js';
+import * as state from './recebimentos.state.js';
+import * as service from './recebimentos.service.js';
 import { registrarSubmodulo } from '../../financeiro.registry.js';
 
 function montarQuandoPronto() {
-  if (typeof window.store === 'undefined' || typeof window.showToast !== 'function') {
+  const prontoParaMontar =
+    typeof window.store !== 'undefined' &&
+    typeof window.showToast === 'function' &&
+    typeof window.getConfigWpp === 'function';
+  if (!prontoParaMontar) {
     setTimeout(montarQuandoPronto, 50);
     return;
   }
 
   state.conectarStore(window.store);
 
-  const controller = criarControllerDespesas({
+  const controller = criarControllerRecebimentos({
     showToast: window.showToast,
     registrarAuditoria: window.registrarAuditoria,
     fmtMoney: window.fmtMoney,
     fmtDate: window.fmtDate,
+    today: window.today,
+    isVencido: window.isVencido,
+    diffDays: window.diffDays,
     closeModal: window.closeModal,
     openModal: window.openModal,
-    today: window.today
+    getConfigWpp: window.getConfigWpp,
+    wppMsgPadrao: window.WPP_MSG_PADRAO,
+    wppMsgReciboPadrao: window.WPP_MSG_RECIBO_PADRAO,
+    getDadosEscritorio: window.getDadosEscritorio,
+    getNomeEscritorio: window.getNomeEscritorio,
+    getLogoInlineHtml: window.getLogoInlineHtml,
+    notifPagamentoConfirmado: window.notifPagamentoConfirmado,
+    updateDashboard: window.updateDashboard
   });
 
   // Substitui as globais antigas pelas novas (mesmo nome, nova implementação)
-  window.getDespesas = state.listarDespesas;
-  window.atualizarStatusDespesas = () => service.atualizarStatusVencidas(state.listarDespesas(), window.today);
-  window.renderDespesas = controller.onRenderDespesas;
-  window.renderDespesasCards = controller.onRenderDespesas; // cards fazem parte do mesmo render agora
-  window.toggleRecorrencia = controller.onToggleRecorrencia;
-  window.salvarDespesa = controller.onSalvarDespesa;
-  window.editarDespesa = controller.onEditarDespesa;
-  window.excluirDespesa = controller.onExcluirDespesa;
-  window.abrirPagarDespesa = controller.onAbrirPagarDespesa;
-  window.confirmarPagamentoDespesa = controller.onConfirmarPagamentoDespesa;
+  window.getParcelaStatus = (p) => service.getStatusParcela(p, window.isVencido);
+  window.renderParcelas = controller.onRenderParcelas;
+  window.renderFinVisao = controller.onRenderFinVisao;
+  window.updateParcelasSelect = controller.onUpdateParcelasSelect;
+  window.confirmarPagamento = controller.onConfirmarPagamento;
+  window.marcarPago = controller.onMarcarPago;
+  window.abrirReagendar = controller.onAbrirReagendar;
+  window.confirmarReagendar = controller.onConfirmarReagendar;
+  window.abrirDescontoAcrescimo = controller.onAbrirDescontoAcrescimo;
+  window.calcularDA = controller.onCalcularDA;
+  window.confirmarDA = controller.onConfirmarDA;
+  window.gerarParcelasManual = controller.onGerarParcelasManual;
+  window.gerarReciboPagamento = controller.onGerarReciboPagamento;
+  window.montarMensagemRecibo = controller.onMontarMensagemRecibo;
+  window.abrirModalWppRecibo = controller.onAbrirModalWppRecibo;
+  window.montarMensagemWpp = controller.onMontarMensagemWpp;
+  window.abrirModalWpp = controller.onAbrirModalWpp;
 
-  // API pública exposta a outros submódulos do domínio (Relatórios vai
-  // usar isto quando migrar, em vez de ler store.despesas direto).
-  registrarSubmodulo('despesas', {
-    listarTodas: state.listarDespesas,
-    calcularResumo: (today) => service.calcularResumoCards(state.listarDespesas(), today)
+  // API pública exposta a outros submódulos/domínios (Relatórios e
+  // Processos vão usar isto, via financeiro.registry.js, em vez de ler
+  // store.parcelas diretamente).
+  registrarSubmodulo('recebimentos', {
+    listarTodas: state.listarParcelas,
+    calcularResumo: (isVencido) => service.calcularResumoFinanceiro(state.listarParcelas(), isVencido),
+    gerarParcelasParaProcesso: service.gerarParcelasParaProcesso
   });
 
-  console.info('[despesas] submódulo carregado — via src/modules/financeiro/modules/despesas/');
+  console.info('[recebimentos] submódulo carregado — via src/modules/financeiro/modules/recebimentos/');
 }
 
 montarQuandoPronto();

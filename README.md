@@ -4,8 +4,8 @@
 | Submódulo | Status | Etapa |
 |---|---|---|
 | Despesas | ✅ migrado | concluída em 06/08/2026 |
-| Recebimentos | ⬜ monólito | próxima etapa |
-| Relatórios | ⬜ monólito | depende de Recebimentos + Despesas migrados |
+| Recebimentos | ✅ migrado | concluída em 06/08/2026 (inclui correção de bug — ver README do submódulo) |
+| Relatórios | ⬜ monólito | próxima etapa — agora desbloqueada |
 
 ## Regra de isolamento
 Nenhum submódulo importa arquivos de dentro de outro submódulo. Toda
