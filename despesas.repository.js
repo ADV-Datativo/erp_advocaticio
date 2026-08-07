@@ -8,14 +8,12 @@
 
 import { getSB } from '../../../../core/supabase-client.js';
 import { getEscritorioId } from '../../../../core/auth.js';
+import { RepositoryError } from '../../../../core/errors/index.js';
 
-export class RepositoryError extends Error {
-  constructor(message, cause) {
-    super(message);
-    this.name = 'RepositoryError';
-    this.cause = cause;
-  }
-}
+// Re-exportado com o mesmo nome para que nenhum import em
+// despesas.controller.js precise mudar (eles importam RepositoryError
+// deste arquivo, não do Core diretamente).
+export { RepositoryError };
 
 function despesaDoBanco(row) {
   return {
