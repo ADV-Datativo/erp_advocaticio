@@ -1,32 +1,41 @@
-# Datativo Design Language
+# ADV Easy
 
-Documentação de fundamentos visuais do ADV Easy / Datativo Labs.
-Sprint 1 da Fase 2 (Datativo UI). Nenhum documento aqui escolhe cor,
-desenha componente ou implementa animação — são princípios e conceitos
-que orientam as sprints seguintes (Tokens, Theme Engine, Component
-Library, Layout Engine).
+SaaS multi-tenant de gestão para escritórios de advocacia (ERP jurídico)
+— do lead à quitação do processo, com portal próprio para o cliente
+final. Desenvolvido pela **Datativo Labs**.
 
-## Índice
+## Stack
+- **Arquitetura**: SPA single-file por superfície (HTML + CSS + JS puro),
+  migrando incrementalmente para ES Modules nativos — sem bundler, sem
+  build step
+- **Backend**: Supabase (Auth, PostgreSQL, Storage, Edge Functions)
+- **Hospedagem**: GitHub Pages
 
-1. [Brand Principles](01-brand-principles.md) — quem a marca é, visualmente
-2. [Design Principles](02-design-principles.md) — critérios de decisão para toda UI
-3. [Visual Language](03-visual-language.md) — conceitos de organização visual
-4. [Motion](04-motion.md) — filosofia de movimento
-5. [Accessibility](05-accessibility.md) — requisitos não-negociáveis
-6. [Layout Philosophy](06-layout-philosophy.md) — estrutura de página
-7. [Navigation](07-navigation.md) — padrões de navegação
-8. [Feedback](08-feedback.md) — comunicação de estado ao usuário
-9. [Writing Guidelines](09-writing-guidelines.md) — padronização de texto
-10. [Roadmap](10-roadmap.md) — conexão com as sprints seguintes
+## Estrutura do repositório
+```
+index.html                    — ERP principal (superfície monolítica em migração)
+admin-onboarding.html         — painel super admin
+adveasy-landing.html          — landing page
+src/
+├── core/                     — Datativo Core (infraestrutura compartilhada:
+│                                errors, logger, events, registry, permissions)
+└── modules/                  — domínios migrados para Clean Architecture
+    ├── financeiro/            (Despesas, Recebimentos, Relatórios)
+    ├── operacional/           (Diário Oficial)
+    └── sistema/               (Mensagens)
+docs/
+└── design/                   — Datativo Design Language (fundamentos visuais)
+```
 
-## Como usar este conjunto de documentos
+## Migração em andamento
+O sistema está em transição de um `index.html` monolítico para uma
+arquitetura modular por domínio (Controller/Service/Repository), usando
+o padrão strangler: módulos migrados registram funções sob os mesmos
+nomes globais que o HTML já usa, sem exigir mudança no HTML.
 
-Qualquer decisão de interface daqui em diante — tokens, componentes,
-layout — deve ser rastreável a um princípio definido aqui. Se uma
-decisão técnica não se encaixa em nenhum documento, o caminho certo é
-atualizar a documentação primeiro, não decidir por conta própria no
-código.
+Consulte `src/core/README.md` e o README de cada domínio em
+`src/modules/*/README.md` para detalhes de cada etapa da migração.
 
-## Status
-Sprint 1 concluída. Aguardando aprovação de Renan + ChatGPT antes de
-prosseguir para a Sprint 2 (Design Tokens).
+## Design
+Fundamentos de identidade visual e princípios de interface em
+`docs/design/` — leia antes de qualquer decisão de UI.
