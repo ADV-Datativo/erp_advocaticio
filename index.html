@@ -15077,7 +15077,6 @@ function exportarCSV() {
 
 // ==================== LOGIN ====================
 const LOGIN_KEY = 'lexpro_auth';
-const USERS_KEY = 'lexpro_users';
 const LEMBRAR_KEY = 'lexpro_lembrar';
 
 // Lê a sessão atual (definida em fazerLogin). Retorna {} se não houver sessão.
@@ -15130,25 +15129,6 @@ function getUsuarioAtual() {
 }
 function pode(acao) { return PERFIS[getPerfilAtual()]?.pode[acao] ?? false; }
 
-function getUsers() {
-  const saved = localStorage.getItem(USERS_KEY);
-  let users = saved ? JSON.parse(saved) : null;
-  if(!users || !users.length) {
-    users = [{ id:1, usuario:'admin', senha:'admin123', nome:'Administrador', perfil:'admin', ativo:true, email:'admin@diegonilavienna.adv.br' }];
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    return users;
-  }
-  let changed = false;
-  users.forEach((u,i) => {
-    if(!u.perfil) { u.perfil = 'admin'; changed = true; }
-    if(!u.id) { u.id = i+1; changed = true; }
-    if(!u.nome) { u.nome = u.usuario; changed = true; }
-    if(u.ativo === undefined) { u.ativo = true; changed = true; }
-  });
-  if(changed) localStorage.setItem(USERS_KEY, JSON.stringify(users));
-  return users;
-}
-function saveUsers(users) { localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
 
 function mostrarPainel(id) {
   document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
@@ -15349,11 +15329,6 @@ async function cadastrarUsuario() {
         errEl.textContent = '❌ ' + (error.message === 'User already registered' ? 'Este e-mail já está cadastrado.' : error.message);
         errEl.style.display = 'block';
       } else {
-        // Salvar perfil local como secretaria por padrão (admin aprova depois)
-        const users = getUsers();
-        const newId = Math.max(0, ...users.map(u=>u.id||0)) + 1;
-        users.push({ id: newId, usuario: email.split('@')[0], senha, nome, perfil: 'secretaria', ativo: true, email, aprovado: false, dataCadastro: new Date().toISOString() });
-        saveUsers(users);
         document.getElementById('confirmar-email-dest').textContent = email;
         mostrarPainel('panel-confirmar');
       }
