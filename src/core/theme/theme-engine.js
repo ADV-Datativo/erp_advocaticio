@@ -44,4 +44,26 @@ function atualizarMetaThemeColor(cor) {
 
 atualizarMetaThemeColor(DEFAULT_PRIMARY);
 
+/**
+ * Caminho dos arquivos de logo Datativo, por variante. AINDA NÃO
+ * PLUGADO em nenhuma tela — os arquivos atuais têm fundo sólido (branco/
+ * preto), não transparente, então usá-los assim deixaria um retângulo
+ * visível em qualquer fundo que não seja exatamente branco ou preto
+ * puro. Renan está providenciando versões com fundo transparente
+ * (07/08/2026). Assim que chegarem, substituir os dois arquivos em
+ * src/core/theme/assets/ (mesmo nome) — esta função não precisa mudar.
+ */
+const LOGO_DATATIVO = Object.freeze({
+  light: '../../core/theme/assets/datativo-logo-light-bg.png', // fundo claro (ainda sólido)
+  dark: '../../core/theme/assets/datativo-logo-dark-bg.png'    // fundo escuro (ainda sólido)
+});
+
+/**
+ * @param {boolean} modoEscuro
+ * @returns {string} caminho do arquivo de logo Datativo certo pro tema atual.
+ */
+export function getLogoDatativoPath(modoEscuro) {
+  return modoEscuro ? LOGO_DATATIVO.dark : LOGO_DATATIVO.light;
+}
+
 console.info('[theme-engine] tokens Datativo carregados — padrão:', DEFAULT_PRIMARY);
