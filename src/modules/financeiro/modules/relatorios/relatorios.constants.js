@@ -48,3 +48,6 @@ export const DESP_STATUS = Object.freeze({
 
 export const MESES_NOMES = Object.freeze(['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']);
 export const JANELA_GRAFICO_MESES = 6;
+
+/** Dias de atraso a partir dos quais uma parcela vencida é considerada inadimplência grave (usado em relatorios.service.js, calcularInadimplencia). */
+export const LIMITE_DIAS_INADIMPLENCIA_GRAVE = 30;
