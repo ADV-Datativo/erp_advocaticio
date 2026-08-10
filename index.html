@@ -11329,7 +11329,10 @@ function renderCalendario() {
   // Em telas estreitas (celular), células mais baixas — o calendário inteiro
   // precisa caber sem rolagem horizontal, e o detalhe do dia já aparece
   // abaixo dele (ver #card-dia-selecionado no CSS mobile).
-  const alturaCelula = window.innerWidth <= 768 ? '52px' : '72px';
+  // Breakpoint vem do Layout Engine (src/core/theme/layout/layout-engine.js),
+  // não mais hardcoded — fallback defensivo caso o módulo ainda não tenha carregado.
+  const ehMobile = window.DATATIVO_LAYOUT ? window.DATATIVO_LAYOUT.isMobile() : window.innerWidth <= 768;
+  const alturaCelula = ehMobile ? '52px' : '72px';
 
   // Células vazias
   for(let i = 0; i < primeiroDia; i++) {
@@ -15646,6 +15649,8 @@ initWithSupabase();
      substitui, por trás do mesmo nome de função, a implementação
      equivalente que ainda existe (como código morto) mais acima neste
      arquivo. Ver docs/arquitetura/guia-migracao-modulos.md. -->
+<script type="module" src="src/core/theme/theme-engine.js"></script>
+<script type="module" src="src/core/theme/layout/layout-engine.js"></script>
 <script type="module" src="src/modules/financeiro/modules/despesas/index.js"></script>
 <script type="module" src="src/modules/financeiro/modules/recebimentos/index.js"></script>
 <script type="module" src="src/modules/financeiro/modules/relatorios/index.js"></script>
