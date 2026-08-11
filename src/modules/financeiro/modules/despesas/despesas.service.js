@@ -34,7 +34,7 @@ export function atualizarStatusVencidas(despesas, today) {
 export function calcularResumoCards(despesas, today) {
   const hoje = today();
   const mesAtual = hoje.substring(0, 7);
-  const d30 = new Date();
+  const d30 = new Date(hoje + 'T12:00:00');
   d30.setDate(d30.getDate() + DIAS_JANELA_A_VENCER);
   const d30s = d30.toISOString().split('T')[0];
 
