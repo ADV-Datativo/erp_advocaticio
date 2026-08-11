@@ -1,0 +1,31 @@
+name: Testes automatizados
+
+# Roda em todo push na main e em toda Pull Request — mesma filosofia
+# "sem build step" do projeto: zero dependência de pacote externo,
+# só o test runner nativo do Node (node:test).
+"on":
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verificar sintaxe de todos os arquivos .js (equivalente a lint mínimo)
+        run: |
+          find src -name "*.js" -not -name "*.test.js" | while read -r arquivo; do
+            node --check "$arquivo" || exit 1
+          done
+
+      - name: Rodar os testes (node --test)
+        run: node --test

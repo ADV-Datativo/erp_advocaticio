@@ -9,6 +9,7 @@ import { RepositoryError } from './despesas.repository.js';
 import { renderizarTabelaDespesas } from './components/tabela-despesas.js';
 import { renderizarCardsResumo } from './components/cards-resumo.js';
 import { notificarDespesaPaga } from './despesas.events.js';
+import { pode } from '../../../../core/permissions/index.js';
 
 /**
  * @param {object} deps dependências que ainda vivem no monólito.
@@ -112,6 +113,10 @@ export function criarControllerDespesas(deps) {
   }
 
   async function onExcluirDespesa(id) {
+    if (!pode('financeiro.despesas.delete')) {
+      showToast('Você não tem permissão para excluir despesas.', 'error');
+      return;
+    }
     if (!confirm('Excluir esta despesa?')) return;
     const ok = await service.excluirDespesa(id);
     if (!ok) { showToast('Erro ao excluir despesa.', 'error'); return; }
