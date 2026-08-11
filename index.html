@@ -12038,6 +12038,11 @@ async function cancelarConvite(id) {
 }
 
 async function removerUsuarioEscritorio(id) {
+  const permissoesProntas = window.DATATIVO_PERMISSIONS && typeof window.DATATIVO_PERMISSIONS.pode === 'function';
+  if (!permissoesProntas || !window.DATATIVO_PERMISSIONS.pode('sistema.usuarios.delete')) {
+    showToast('Você não tem permissão para remover acesso de usuários.', 'error');
+    return;
+  }
   if(!confirm('Remover o acesso desta pessoa a este escritório?')) return;
   const sb = await getSB();
   const escritorioId = getEscritorioId();
@@ -15651,6 +15656,9 @@ initWithSupabase();
      arquivo. Ver docs/arquitetura/guia-migracao-modulos.md. -->
 <script type="module" src="src/core/theme/theme-engine.js"></script>
 <script type="module" src="src/core/theme/layout/layout-engine.js"></script>
+<script type="module" src="src/core/permissions/permissions-bridge.js"></script>
+<script type="module" src="src/core/audit/audit-bridge.js"></script>
+<script type="module" src="src/core/observability/error-tracking-bridge.js"></script>
 <script type="module" src="src/modules/financeiro/modules/despesas/index.js"></script>
 <script type="module" src="src/modules/financeiro/modules/recebimentos/index.js"></script>
 <script type="module" src="src/modules/financeiro/modules/relatorios/index.js"></script>
