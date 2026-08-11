@@ -8,6 +8,7 @@
 import { getSB } from '../../../../core/supabase-client.js';
 import { getEscritorioId } from '../../../../core/auth.js';
 import { RepositoryError } from '../../../../core/errors/index.js';
+import { logger } from '../../../../core/logger/index.js';
 
 // Re-exportado com o mesmo nome para que nenhum import em
 // recebimentos.controller.js precise mudar.
@@ -53,7 +54,7 @@ export async function carregarParcelas() {
     .select('*')
     .eq('escritorio_id', escritorioId)
     .order('vencimento');
-  if (error) { console.warn('Erro ao carregar parcelas:', error.message); return []; }
+  if (error) { logger.warn('Erro ao carregar parcelas: ' + error.message, 'recebimentos.repository'); return []; }
   return (data || []).map(parcelaDoBanco);
 }
 
@@ -100,6 +101,6 @@ export async function excluirParcelasDoProcesso(processoId) {
     .delete()
     .eq('processo_id', processoId)
     .eq('escritorio_id', escritorioId);
-  if (error) { console.warn('Erro ao excluir parcelas do processo:', error.message); return false; }
+  if (error) { logger.warn('Erro ao excluir parcelas do processo: ' + error.message, 'recebimentos.repository'); return false; }
   return true;
 }

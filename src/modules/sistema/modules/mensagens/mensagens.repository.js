@@ -6,6 +6,7 @@
 import { getSB } from '../../../../core/supabase-client.js';
 import { getEscritorioId } from '../../../../core/auth.js';
 import { RepositoryError } from '../../../../core/errors/index.js';
+import { logger } from '../../../../core/logger/index.js';
 
 export { RepositoryError };
 
@@ -19,7 +20,7 @@ export async function carregarTodasAsMensagens() {
     .select('*, clientes(nome)')
     .eq('escritorio_id', eid)
     .order('criado_em', { ascending: false });
-  if (error) { console.warn(error.message); return []; }
+  if (error) { logger.warn(error.message, 'mensagens.repository'); return []; }
   return data || [];
 }
 
@@ -34,7 +35,7 @@ export async function carregarMensagensDoCliente(clienteId) {
     .eq('cliente_id', clienteId)
     .eq('escritorio_id', eid)
     .order('criado_em', { ascending: true });
-  if (error) { console.warn(error.message); return []; }
+  if (error) { logger.warn(error.message, 'mensagens.repository'); return []; }
   return data || [];
 }
 

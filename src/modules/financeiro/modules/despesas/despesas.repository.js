@@ -9,6 +9,7 @@
 import { getSB } from '../../../../core/supabase-client.js';
 import { getEscritorioId } from '../../../../core/auth.js';
 import { RepositoryError } from '../../../../core/errors/index.js';
+import { logger } from '../../../../core/logger/index.js';
 
 // Re-exportado com o mesmo nome para que nenhum import em
 // despesas.controller.js precise mudar (eles importam RepositoryError
@@ -59,7 +60,7 @@ export async function carregarDespesas() {
     .select('*')
     .eq('escritorio_id', escritorioId)
     .order('vencimento');
-  if (error) { console.warn('Erro ao carregar despesas:', error.message); return []; }
+  if (error) { logger.warn('Erro ao carregar despesas: ' + error.message, 'despesas.repository'); return []; }
   return (data || []).map(despesaDoBanco);
 }
 
@@ -98,6 +99,6 @@ export async function excluirDespesa(id) {
   const escritorioId = getEscritorioId();
   if (!sb || !escritorioId) return false;
   const { error } = await sb.from('despesas').delete().eq('id', id).eq('escritorio_id', escritorioId);
-  if (error) { console.warn('Erro ao excluir despesa:', error.message); return false; }
+  if (error) { logger.warn('Erro ao excluir despesa: ' + error.message, 'despesas.repository'); return false; }
   return true;
 }

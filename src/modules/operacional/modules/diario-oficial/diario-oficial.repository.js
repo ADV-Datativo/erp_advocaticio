@@ -62,7 +62,7 @@ export async function carregarPublicacoes() {
     .eq('escritorio_id', escritorioId)
     .order('data_publicacao', { ascending: false })
     .order('criado_em', { ascending: false });
-  if (error) { console.warn('Erro ao carregar publicações:', error.message); return []; }
+  if (error) { logger.warn('Erro ao carregar publicações: ' + error.message, 'diario-oficial.repository'); return []; }
   return (data || []).map(publicacaoDoBanco);
 }
 
@@ -109,6 +109,6 @@ export async function excluirPublicacao(id) {
     .delete()
     .eq('id', id)
     .eq('escritorio_id', escritorioId);
-  if (error) { console.warn('Erro ao excluir publicação:', error.message); return false; }
+  if (error) { logger.warn('Erro ao excluir publicação: ' + error.message, 'diario-oficial.repository'); return false; }
   return true;
 }
