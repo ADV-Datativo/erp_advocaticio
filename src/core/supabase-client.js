@@ -13,6 +13,8 @@
 const SB_URL = 'https://voufezlvxnihfazimjqe.supabase.co';
 const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvdWZlemx2eG5paGZhemltanFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MDAwOTcsImV4cCI6MjA5NzM3NjA5N30.AWWNngX-7nK0I9ZgbcJWiC6zNY2dfsBBxC1zaqMWH7s';
 
+export { SB_URL };
+
 let _sb = null;
 let _sessaoTimer = null;
 

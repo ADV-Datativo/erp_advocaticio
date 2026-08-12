@@ -15244,6 +15244,11 @@ const PERFIS = {
     pode: { editarClientes:true, excluirClientes:false, verFinanceiro:false, gerenciarUsuarios:false, verOpcoes:false, exportarRelatorio:false }
   }
 };
+// Exposto em window porque `const` de topo não vira propriedade global
+// automaticamente (diferente de `function`) — necessário para os
+// módulos ES (src/modules/sistema/modules/usuarios/) conseguirem ler o
+// mesmo objeto. Não altera o conteúdo nem o comportamento.
+window.PERFIS = PERFIS;
 
 function getPerfilAtual() {
   try { return JSON.parse(localStorage.getItem(LOGIN_KEY)||'{}').perfil || 'admin'; } catch(e) { return 'admin'; }
@@ -15778,5 +15783,6 @@ initWithSupabase();
 <script type="module" src="src/modules/sistema/modules/mensagens/index.js"></script>
 <script type="module" src="src/modules/sistema/modules/informativos/index.js"></script>
 <script type="module" src="src/modules/sistema/modules/seguranca/index.js"></script>
+<script type="module" src="src/modules/sistema/modules/usuarios/index.js"></script>
 </body>
 </html>
