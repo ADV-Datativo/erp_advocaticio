@@ -125,6 +125,22 @@ export async function gerarParcelasParaProcesso(dados) {
   return salvas;
 }
 
+/**
+ * Persiste parcelas JÁ CALCULADAS por outro domínio (usado por Processos
+ * ao criar um processo novo, respeitando datas customizadas por parcela
+ * que o cliente pode ter — cenário que gerarParcelasParaProcesso acima
+ * não cobre, porque gera datas uniformes mês a mês). Existe pra
+ * Processos nunca precisar escrever direto em store.parcelas — sempre
+ * passa pelo Registry do Financeiro, mesma regra de sempre.
+ * @param {string} processoId @param {Array} parcelasPreCalculadas
+ * @returns {Promise<Array>} as parcelas salvas.
+ */
+export async function salvarParcelasPreCalculadas(processoId, parcelasPreCalculadas) {
+  const salvas = await repository.criarParcelas(parcelasPreCalculadas);
+  state.substituirParcelasDoProcesso(processoId, salvas);
+  return salvas;
+}
+
 /** @returns {Promise<object>} a parcela marcada como paga. */
 export async function confirmarPagamento(id, { dataPagamento, obs }) {
   validarSelecaoParcela(id);

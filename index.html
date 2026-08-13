@@ -9107,6 +9107,12 @@ function showToast(msg, type = '') {
 // ==================== NAVIGATION ====================
 let currentPage = 'dashboard';
 let procTabFilter = 'todos';
+// Getter exposto pro módulo ES de Processos conseguir ler o valor atual
+// — `let` de topo não vira propriedade de `window` sozinho, e switchTab()
+// (que não foi tocado) muta essa variável diretamente. Como é uma
+// function declaration, vira window.getProcTabFilter automaticamente e
+// sempre reflete o valor mais recente (closure sobre a mesma variável).
+function getProcTabFilter() { return procTabFilter; }
 
 const pageTitles = {
   dashboard: 'Dashboard', tipos: 'Tipos de Processo', clientes: 'Clientes', 'historico-contatos': 'Histórico de Contatos',
@@ -15780,6 +15786,7 @@ initWithSupabase();
 <script type="module" src="src/modules/financeiro/modules/relatorios/index.js"></script>
 <script type="module" src="src/modules/operacional/modules/diario-oficial/index.js"></script>
 <script type="module" src="src/modules/operacional/modules/intimacoes/index.js"></script>
+<script type="module" src="src/modules/operacional/modules/processos/index.js"></script>
 <script type="module" src="src/modules/sistema/sistema.module.js"></script>
 <script type="module" src="src/modules/sistema/modules/mensagens/index.js"></script>
 <script type="module" src="src/modules/sistema/modules/informativos/index.js"></script>

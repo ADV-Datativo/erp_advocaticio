@@ -69,6 +69,7 @@ function montarQuandoPronto() {
     listarTodas: state.listarParcelas,
     calcularResumo: (isVencido) => service.calcularResumoFinanceiro(state.listarParcelas(), isVencido),
     gerarParcelasParaProcesso: service.gerarParcelasParaProcesso,
+    salvarParcelasPreCalculadas: service.salvarParcelasPreCalculadas,
     getStatusParcela: service.getStatusParcela
   });
 
