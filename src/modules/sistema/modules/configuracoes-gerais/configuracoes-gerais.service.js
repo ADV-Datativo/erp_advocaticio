@@ -2,6 +2,7 @@
 // Regra de negócio pura. Nunca toca DOM.
 
 import { COR_PRIMARIA_PADRAO, COR_DESTAQUE_PADRAO } from './configuracoes-gerais.constants.js';
+import * as repository from './configuracoes-gerais.repository.js';
 
 /**
  * Clareia (fator positivo) ou escurece (fator negativo) uma cor hex.
@@ -85,4 +86,18 @@ export function resolverCoresEfetivas(aparenciaSalva, defaultsThemeEngine) {
     primaria: ap.corPrimaria || defaults.corPrimaria,
     destaque: ap.corDestaque || defaults.corDestaque
   };
+}
+
+/**
+ * Persiste a identidade visual de verdade no Supabase — achado crítico
+ * corrigido em 12/08/2026 (antes só ia pro localStorage).
+ * @param {{corPrimaria: string, corDestaque: string, logoBase64: string|null}} aparencia
+ */
+export async function salvarAparenciaNoBanco(aparencia) {
+  await repository.salvarAparenciaNoBanco(aparencia);
+}
+
+/** @returns {Promise<{corPrimaria: string|null, corDestaque: string|null, logoBase64: string|null}>} */
+export async function carregarAparenciaDoBanco() {
+  return repository.carregarAparenciaDoBanco();
 }

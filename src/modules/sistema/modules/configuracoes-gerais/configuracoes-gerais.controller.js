@@ -11,6 +11,7 @@
 import * as service from './configuracoes-gerais.service.js';
 import * as state from './configuracoes-gerais.state.js';
 import { corHexValida, validarNomeEscritorio, validarArquivoLogo, ValidationError } from './configuracoes-gerais.validation.js';
+import { RepositoryError } from './configuracoes-gerais.repository.js';
 import { COR_PRIMARIA_PADRAO, COR_DESTAQUE_PADRAO } from './configuracoes-gerais.constants.js';
 
 export function criarControllerConfiguracoesGerais(deps) {
@@ -152,16 +153,31 @@ export function criarControllerConfiguracoesGerais(deps) {
     }
     state.limparLogoTemp();
 
+    try {
+      await service.salvarAparenciaNoBanco(store.aparencia);
+    } catch (err) {
+      if (err instanceof RepositoryError) { showToast(err.message, 'error'); return; }
+      throw err;
+    }
+
     onAplicarAparencia();
-    saveData();
+    saveData(); // mantém o snapshot local também, não é mais a única fonte de verdade
     showToast('✅ Identidade Visual atualizada com sucesso!', 'success');
   }
 
-  function onRestaurarAparenciaPadrao() {
+  async function onRestaurarAparenciaPadrao() {
     if (!confirm('Restaurar as cores e a logo padrão do sistema? A logo customizada será removida. O nome do escritório não será alterado.')) return;
     const nomeAtual = getNomeEscritorio();
     store.aparencia = { corPrimaria: COR_PRIMARIA_PADRAO, corDestaque: COR_DESTAQUE_PADRAO, logoBase64: null, nomeEscritorio: nomeAtual };
     state.limparLogoTemp();
+
+    try {
+      await service.salvarAparenciaNoBanco(store.aparencia);
+    } catch (err) {
+      if (err instanceof RepositoryError) { showToast(err.message, 'error'); return; }
+      throw err;
+    }
+
     onAplicarAparencia();
     onCarregarFormAparencia();
     saveData();

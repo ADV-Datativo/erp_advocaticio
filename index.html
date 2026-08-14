@@ -8692,6 +8692,16 @@ async function sbLoad() {
   store.intimacoes = intimacoes;
   store.orcamentos = orcamentos;
   store.escritorio = dadosEscritorio || {};
+  // Achado crítico corrigido em 12/08/2026: store.aparencia nunca era
+  // populado a partir do banco — as colunas cor_primaria/cor_destaque/
+  // logo_base64 já existiam em `escritorios`, mas nunca eram lidas de
+  // volta pro front-end. Populado aqui, a partir do mesmo dado que já
+  // tínhamos buscado pra store.escritorio, sem round-trip extra.
+  store.aparencia = {
+    corPrimaria: store.escritorio.cor_primaria || null,
+    corDestaque: store.escritorio.cor_destaque || null,
+    logoBase64: store.escritorio.logo_base64 || null
+  };
   store.exitos = exitos;
   store.tags = tags;
   store.clientesTags = clientesTags;
