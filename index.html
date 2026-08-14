@@ -4910,6 +4910,18 @@ let store = {
   docsCliente: {},
   nextId: { tipo:1, cliente:1, processo:1, parcela:1, modelo:1, evento:1, doc:1, despesa:1, orcamento:1, exito:1 }
 };
+// CORREÇÃO CRÍTICA (14/08/2026): window.store nunca foi definida em
+// lugar nenhum do código, desde o início da migração. `let` de topo não
+// vira propriedade de `window` sozinha (mesma pegadinha já vista com
+// PERFIS, WPP_MSG_PADRAO, procTabFilter — mas essa é a mais usada de
+// todas). Todo módulo migrado (Despesas, Recebimentos, Mensagens,
+// Informativos, Intimações, Processos, Configurações Gerais, etc.)
+// depende de `typeof window.store !== 'undefined'` pra saber quando
+// montar — sem essa linha, esse guard nunca passa de verdade. Como
+// `store` nunca é reatribuída (só mutada), uma ponte única aqui é
+// suficiente pra sempre: window.store e store sempre apontam pro mesmo
+// objeto.
+window.store = store;
 
 // ==================== SUPABASE CONFIG ====================
 const SB_URL  = 'https://voufezlvxnihfazimjqe.supabase.co';
