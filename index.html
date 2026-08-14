@@ -5618,7 +5618,7 @@ async function carregarDadosEscritorio() {
   if(!sb || !escritorioId) return null;
   const { data, error } = await sb
     .from('escritorios')
-    .select('id, nome, oab, cnpj, email, telefone, endereco, status_pagamento, proximo_vencimento')
+    .select('id, nome, oab, cnpj, email, telefone, endereco, status_pagamento, proximo_vencimento, cor_primaria, cor_destaque, logo_base64')
     .eq('id', escritorioId)
     .single();
   if(error) { console.warn('Erro ao carregar dados do escritório:', error.message); return null; }
